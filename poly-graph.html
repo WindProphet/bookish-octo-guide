@@ -1,13 +1,17 @@
 <html>
  <head>
   <script type="application/javascript">
-    function pointByPolar(deg) {
-      return [512 + 500 * Math.sin(deg), 512 - 500 * Math.cos(deg)]
-    }
-    
-    let points = []
-    for (i = 0; i < 5; i++) {
-      points[i] = pointByPolar(2*Math.PI/5*i);;;;;;;;;;
+
+    function resize() {
+      let w = window.innerWidth;
+      let h = window.innerHeight;
+      let dpr = window.devicePixelRatio || 1;
+      let canvasElement = document.getElementById("canvas");
+      canvasElement.width = w * dpr;
+      canvasElement.height = h * dpr;
+      canvasElement.style.width = w + 'px';
+      canvasElement.style.height = h + 'px';
+      draw();
     }
     
     function subGraph(points) {
@@ -24,6 +28,20 @@
     
     function draw() {
       var canvas = document.getElementById("canvas");
+      
+      let w = canvas.width,
+          h = canvas.height;
+
+      let r = 100;
+      if (w > h) {
+        r = h / 2;
+      } else {
+        r = w / 2;
+      }
+
+      function pointByPolar(deg) {
+        return [(w/2) + r * Math.sin(deg), (h/2) - r * Math.cos(deg)]
+      }
       
       if (canvas.getContext) {
         var ctx = canvas.getContext("2d");
@@ -52,9 +70,25 @@
         
       }
     }
+
+    window.addEventListener("resize", resize);
+    window.addEventListener("load",   resize);
   </script>
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+    }
+    #canvas {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  </style>
  </head>
- <body onload="draw();">
+ <body>
    <canvas id="canvas" width="1024" height="1024"></canvas>
  </body>
 </html>
