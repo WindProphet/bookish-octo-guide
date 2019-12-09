@@ -1,0 +1,60 @@
+<html>
+ <head>
+  <script type="application/javascript">
+    function pointByPolar(deg) {
+      return [512 + 500 * Math.sin(deg), 512 - 500 * Math.cos(deg)]
+    }
+    
+    let points = []
+    for (i = 0; i < 5; i++) {
+      points[i] = pointByPolar(2*Math.PI/5*i);;;;;;;;;;
+    }
+    
+    function subGraph(points) {
+      let numberOfPoints = points.length;
+      let subPoints = [];
+      for (let i = 0; i < numberOfPoints; i++) {
+        subPoints[i] = [
+          (points[i][0] + 9*points[(i+1) % numberOfPoints][0]) / 10,
+          (points[i][1] + 9*points[(i+1) % numberOfPoints][1]) / 10
+        ];
+      }
+      return subPoints;
+    }
+    
+    function draw() {
+      var canvas = document.getElementById("canvas");
+      
+      if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+
+        function drawPoints(points) {
+          let numberOfPoints = points.length; 
+          ctx.moveTo(points[numberOfPoints - 1][0], points[numberOfPoints - 1][1]);
+          for (let i = 0; i < numberOfPoints; i++) {
+            ctx.lineTo(points[i][0], points[i][1]);
+          }
+          ctx.stroke();
+        }
+        
+        let poly = 6;
+        let times = 200;
+        let points = []
+        for (let i = 0; i < poly; i++) {
+          points[i] = pointByPolar(2*Math.PI/poly*i);;;;;;;;;;
+        }
+        
+        drawPoints(points);
+        for (let i = 0; i < times; i++) {
+          points = subGraph(points);
+          drawPoints(points);
+        }
+        
+      }
+    }
+  </script>
+ </head>
+ <body onload="draw();">
+   <canvas id="canvas" width="1024" height="1024"></canvas>
+ </body>
+</html>
