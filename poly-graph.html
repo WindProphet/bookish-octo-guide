@@ -1,6 +1,9 @@
 <html>
  <head>
   <script type="application/javascript">
+    let poly = 6;
+    let times = 200;
+    let z = 1;
 
     function resize() {
       let w = window.innerWidth;
@@ -40,14 +43,16 @@
       }
 
       function pointByPolar(deg) {
-        return [(w/2) + r * Math.sin(deg), (h/2) - r * Math.cos(deg)]
+        return [(w/2) + r * z * Math.sin(deg), (h/2) - r * z * Math.cos(deg)]
       }
       
       if (canvas.getContext) {
         var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, w, h);
 
         function drawPoints(points) {
           let numberOfPoints = points.length; 
+          ctx.beginPath();
           ctx.moveTo(points[numberOfPoints - 1][0], points[numberOfPoints - 1][1]);
           for (let i = 0; i < numberOfPoints; i++) {
             ctx.lineTo(points[i][0], points[i][1]);
@@ -55,8 +60,6 @@
           ctx.stroke();
         }
         
-        let poly = 6;
-        let times = 200;
         let points = []
         for (let i = 0; i < poly; i++) {
           points[i] = pointByPolar(2*Math.PI/poly*i);;;;;;;;;;
@@ -69,6 +72,18 @@
         }
         
       }
+    }
+
+    function changepoly() {
+      let el = document.getElementById('polychanger');
+      poly = Number(el.value);
+      draw();
+    }
+
+    function zoom() {
+      let el = document.getElementById('zoomchanger');
+      z = Number(el.value);
+      draw();
     }
 
     window.addEventListener("resize", resize);
@@ -86,9 +101,25 @@
       top: 0;
       bottom: 0;
     }
+    #setting {
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 1;
+    }
   </style>
  </head>
  <body>
    <canvas id="canvas" width="1024" height="1024"></canvas>
+   <div id="setting">
+      <input id="zoomchanger" onchange="zoom()" type="range" min="1" max="100" value="1" class="slider">
+      <select id="polychanger" onchange="changepoly()">
+        <option value="3">三角形</option>
+        <option value="4">四边形</option>
+        <option value="5">五边形</option>
+        <option value="6" selected>六边形</option>
+        <option value="8">八边形</option>
+      </select>
+   </div>
  </body>
 </html>
